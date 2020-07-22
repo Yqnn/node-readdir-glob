@@ -1,0 +1,6 @@
+.*.swp
+node_modules/*
+v8.log
+profile.txt
+coverage/
+.DS_Store
