@@ -30,10 +30,10 @@ globber.on('end', (m) => {
 
 ## readdirGlob(root, [options])
 
-* `root` `{String}` Pattern to be matched
-* `options` `{Object}`
+* `root` `{String}` Path to be read recursively, *default*: `'.'`
+* `options` `{Object}` Options, *default*: `{}`
 
-Returns a EventEmitter reding given root recursively.
+Returns a EventEmitter reading given root recursively.
 
 ### Properties
 
