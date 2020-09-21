@@ -55,8 +55,9 @@ Returns a EventEmitter reading given root recursively.
 
 ### Options
 
-* `pattern`: Glob pattern or Array of Glob patterns to match the found files with.
-* `ignore`: Glob pattern or Array of Glob patterns to exclude matches. Note: `ignore` patterns are *always* in `dot:true` mode.
+* `pattern`: Glob pattern or Array of Glob patterns to match the found files with. A file has to match at least one of the provided patterns to be returned.
+* `ignore`: Glob pattern or Array of Glob patterns to exclude matches. If a file or a folder matches at least one of the provided patterns, it's not returned. It doesn't prevent files from folder content to be returned. Note: `ignore` patterns are *always* in `dot:true` mode.
+* `skip`: Glob pattern or Array of Glob patterns to exclude folders. If a folder matches one of the provided patterns, it's not returned, and it's not explored: this prevents any of its children to be returned. Note: `skip` patterns are *always* in `dot:true` mode.
 * `mark`: Add a `/` character to directory matches.
 * `stat`: Set to true to stat *all* results.  This reduces performance.
 * `silent`: When an unusual error is encountered when attempting to read a directory, a warning will be printed to stderr.  Set the `silent` option to true to suppress these warnings.

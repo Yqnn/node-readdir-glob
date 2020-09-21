@@ -25,7 +25,7 @@ fi
 
 echo
 
-echo Node statSync and readdirSync timing:
+echo Node statSync and readdirSync:
 time node -e '
   var fs=require("fs");
   var count = 0;
@@ -42,7 +42,7 @@ time node -e '
   console.log(count)'
 echo
 
-echo Node glob timing:
+echo readdir-glob:
 time node -e '
   var glob=require(process.argv[1]);
   glob(".", {nodir: true} ,function (er, files) {
@@ -50,7 +50,7 @@ time node -e '
   })' "$wd"
 echo
 
-echo Node glob with pattern timing:
+echo readdir-glob with pattern:
 time node -e '
   var glob=require(process.argv[1]);
   glob(".", {pattern:"**/*.txt"}, function (er, files) {
@@ -58,7 +58,7 @@ time node -e '
   })' "$wd"
 echo
 
-echo Node glob with pattern and stat timing:
+echo readdir-glob with pattern and stat:
 time node -e '
   var glob=require(process.argv[1]);
   glob(".", {stat:true, pattern:"**/*.txt"}, function (er, files) {
@@ -66,7 +66,7 @@ time node -e '
   })' "$wd"
 echo
 
-echo Node glob with pattern and follow timing:
+echo readdir-glob with pattern and follow:
 time node -e '
   var glob=require(process.argv[1]);
   glob(".", {follow:true, pattern:"**/*.txt"}, function (er, files) {
@@ -74,7 +74,7 @@ time node -e '
   })' "$wd"
 echo
 
-echo Node glob with --prof
+echo readdir-glob with --prof
 cd $wd
 bash ./scripts/profile.sh
 
