@@ -62,14 +62,26 @@ function stat(file, followSyslinks) {
 async function* exploreWalkAsync(dir, path, followSyslinks, useStat, shouldSkip, strict) {
   let files = await readdir(path + dir, strict);
   for(const file of files) {
-    const filename = dir + '/' + file.name;
+    let name = file.name;
+    if(name === undefined) {
+      // undefined file.name means the `withFileTypes` options is not supported by node
+      // we have to call the stat function to know if file is directory or not.
+      name = file;
+      useStat = true;
+    }
+    const filename = dir + '/' + name;
     const relative = filename.slice(1); // Remove the leading /
     const absolute = path + '/' + relative;
     let stats = null;
     if(useStat || followSyslinks) {
       stats = await stat(absolute, followSyslinks);
     }
-    stats = stats || file;
+    if(!stats && file.name !== undefined) {
+      stats = file;
+    }
+    if(stats === null) {
+      stats = { isDirectory: () => false };
+    }
 
     if(stats.isDirectory()) {
       if(!shouldSkip(relative)) {
@@ -110,6 +122,7 @@ class ReaddirGlob extends EventEmitter {
     super();
     if(typeof options === 'function') {
       cb = options;
+      options = null;
     }
 
     this.options = readOptions(options || {});

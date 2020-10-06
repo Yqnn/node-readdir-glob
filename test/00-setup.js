@@ -2,9 +2,27 @@
 // zz-finish cleans it up
 const mkdirp = require('mkdirp');
 const path = require('path');
-const fsPromises = require('fs').promises;
+const fs = require('fs');
 const rimraf = require('rimraf');
 
+
+function promisify(func) {
+  return function(...args) {
+    return new Promise(function(resolve, reject) {
+      func(...args, function(...callbackArgs) {
+        if(callbackArgs[0]) {
+          reject(callbackArgs[0]);
+        } else {
+          resolve(...callbackArgs.slice(1));
+        }
+      });
+    });
+  };
+}
+const fsPromises = {
+  writeFile: promisify(fs.writeFile),
+  symlink: promisify(fs.symlink)
+};
   
 function cleanResults (m) {
   // normalize discrepancies in ordering, duplication,

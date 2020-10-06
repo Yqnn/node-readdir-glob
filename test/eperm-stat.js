@@ -23,7 +23,16 @@ afterAll( () => {
 });
 
 
+function isNodeHigherOrEqual(version) {
+  const requestedVersion = version.replace(/^v/, '').split('.').map((num) => parseInt(num, 10));
+  const currentVersion = process.version.replace(/^v/, '').split('.').map((num) => parseInt(num, 10));
+  return (requestedVersion[0] < currentVersion[0])
+    || (requestedVersion[0] === currentVersion[0] && requestedVersion[1] < currentVersion[1])
+    || (requestedVersion[0] === currentVersion[0] && requestedVersion[1] === currentVersion[1]  && requestedVersion[2] <= currentVersion[2]);
+}
+
 test('stat errors other than ENOENT are ok async', done => {
+  const node10_10 = isNodeHigherOrEqual('v10.10.0');
   const expectedFiles = [
     'a/abcdef',
     'a/abcdef/g',
@@ -34,13 +43,14 @@ test('stat errors other than ENOENT are ok async', done => {
   ];
   glob('fixtures', { stat: true, pattern: 'a/*abc*/**' }, (er, matches) => {
     expect(er).toBeFalsy();
-    expect(matches).toEqual(expectedFiles);
+    expect(matches).toEqual(node10_10 ? expectedFiles : []);
     done();
   });
 });
 
 
 test('globstar with error in root async', done => {
+  const node10_10 = isNodeHigherOrEqual('v10.10.0');
   let expectedFiles = [
     'a',
     'a/abcdef',
@@ -76,7 +86,7 @@ test('globstar with error in root async', done => {
   const pattern = 'a/**';
   glob('fixtures', { pattern }, (er, matches) => {
     expect(er).toBeFalsy();
-    expect(matches).toEqual(expectedFiles);
+    expect(matches).toEqual(node10_10 ? expectedFiles : []);
     done();
   })
 });
