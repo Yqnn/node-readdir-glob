@@ -34,14 +34,14 @@ function readdir(dir, strict) {
     });
   });
 }
-function stat(file, followSyslinks) {
+function stat(file, followSymlinks) {
   return new Promise((resolve, reject) => {
-    const statFunc = followSyslinks ? fs.stat : fs.lstat;
+    const statFunc = followSymlinks ? fs.stat : fs.lstat;
     statFunc(file, (err, stats) => {
       if(err) {
         switch (err.code) {
           case 'ENOENT':
-            if(followSyslinks) {
+            if(followSymlinks) {
               // Fallback to lstat to handle broken links as files
               resolve(stat(file, false)); 
             } else {
@@ -59,7 +59,7 @@ function stat(file, followSyslinks) {
   });
 }
 
-async function* exploreWalkAsync(dir, path, followSyslinks, useStat, shouldSkip, strict) {
+async function* exploreWalkAsync(dir, path, followSymlinks, useStat, shouldSkip, strict) {
   let files = await readdir(path + dir, strict);
   for(const file of files) {
     let name = file.name;
@@ -73,8 +73,8 @@ async function* exploreWalkAsync(dir, path, followSyslinks, useStat, shouldSkip,
     const relative = filename.slice(1); // Remove the leading /
     const absolute = path + '/' + relative;
     let stats = null;
-    if(useStat || followSyslinks) {
-      stats = await stat(absolute, followSyslinks);
+    if(useStat || followSymlinks) {
+      stats = await stat(absolute, followSymlinks);
     }
     if(!stats && file.name !== undefined) {
       stats = file;
@@ -86,15 +86,15 @@ async function* exploreWalkAsync(dir, path, followSyslinks, useStat, shouldSkip,
     if(stats.isDirectory()) {
       if(!shouldSkip(relative)) {
         yield {relative, absolute, stats};
-        yield* exploreWalkAsync(filename, path, followSyslinks, useStat, shouldSkip, false);
+        yield* exploreWalkAsync(filename, path, followSymlinks, useStat, shouldSkip, false);
       }
     } else {
       yield {relative, absolute, stats};
     }
   }
 }
-async function* explore(path, followSyslinks, useStat, shouldSkip) {
-  yield* exploreWalkAsync('', path, followSyslinks, useStat, shouldSkip, true);
+async function* explore(path, followSymlinks, useStat, shouldSkip) {
+  yield* exploreWalkAsync('', path, followSymlinks, useStat, shouldSkip, true);
 }
 
 

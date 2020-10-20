@@ -6,7 +6,7 @@ const lstat = fs.lstat;
 const readdir = fs.readdir;
 
 
-const cwd = process.cwd().toLowerCase();
+const cwd = process.cwd().toLowerCase().replace(/\\/g, '/');
 
 
 function fakeStat(path) {
@@ -98,7 +98,7 @@ test('nocase, nomagic', done => {
 });
 
 test('nocase, with some magic', done => {
-  const want = [
+  let want = [
     'TMP/A',
     'TMP/a',
     'tMP/A',
@@ -108,17 +108,9 @@ test('nocase, with some magic', done => {
     'tmp/A',
     'tmp/a'
   ];
-  if(process.platform.match(/^win/)) {
-    want = want.map( p => drive + ':' + p);
-  }
 
   glob('.', { nocase: true, pattern: 'tmp/*' }, (er, res) => {
     expect(er).toBeFalsy();
-    if (process.platform.match(/^win/)) {
-      res = res.map( r =>
-        r.replace(/\\/g, '/').replace(new RegExp('^' + drive + ':', 'i'), drive+':')
-      );
-    }
     res.sort();
     expect(res).toEqual(want);
     done();

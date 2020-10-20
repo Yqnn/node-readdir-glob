@@ -3,7 +3,7 @@ const path = require('path');
 
 
 if (process.platform === 'win32') {
-  process.exit();
+  test = test.skip;
 }
 
 

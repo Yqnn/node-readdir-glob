@@ -5,13 +5,16 @@ const path = require('path');
 
 const fixtureDir = path.resolve(__dirname, 'fixtures');
 const pattern = 'a*';
-const expected = [
+let expected = [
   'a',
   'a/.abcdef/x/y/z/a',
   'a/abcdef',
   'a/abcfed',
   'a/symlink/a'
 ];
+if (process.platform === 'win32') {
+  expected = expected.filter(path => path.indexOf('/symlink') === -1);
+}
 
 
 test('chdir', done => {

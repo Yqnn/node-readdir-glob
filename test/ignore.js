@@ -64,7 +64,7 @@ cases.forEach((c, i) => {
       expect(er).toBeFalsy();
 
       if (process.platform === 'win32') {
-        expectedFiles = expectedFiles.filter((f) => !/\bsymlink\b/.test(f));
+        expectedFiles = expectedFiles.filter(f => f.indexOf('symlink') === -1);
       }
       res.sort();
       matches.sort();
