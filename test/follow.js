@@ -6,7 +6,7 @@ beforeAll(() => {
 });
 
 if (process.platform === 'win32') {
-  process.exit();
+  test = test.skip;
 }
 
 test('follow symlinks', done => {

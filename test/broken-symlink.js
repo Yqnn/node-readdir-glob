@@ -4,7 +4,7 @@ const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
 
 if (process.platform === 'win32') {
-  process.exit();
+  test = test.skip;
 }
 
 function cleanup () {

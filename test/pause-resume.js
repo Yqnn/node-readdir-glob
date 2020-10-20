@@ -16,16 +16,7 @@ function alphasort (a, b) {
 function cleanResults (m) {
   // normalize discrepancies in ordering, duplication,
   // and ending slashes.
-  return m.map(m =>  m.replace(/\/+/g, '/').replace(/\/$/, ''))
-    .sort(alphasort)
-    .reduce((set, f) => {
-      if (f !== set[set.length - 1]) {
-        set.push(f);
-      }
-      return set;
-    }, [])
-    .sort(alphasort)
-    .map(f => (process.platform !== 'win32') ? f : f.replace(/^[a-zA-Z]:\\\\/, '/').replace(/\\/g, '/'));
+  return m.sort(alphasort);
 }
 
 test('use a ReaddirGlob object, and pause/resume it', done => {

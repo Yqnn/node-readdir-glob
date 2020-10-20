@@ -24,11 +24,11 @@ function alphasort (a, b) {
 }
 
 globs.forEach((pattern) => {
-  const expectedFiles = bashResults[pattern];
+  let expectedFiles = bashResults[pattern];
 
   // anything regarding the symlink thing will fail on windows, so just skip it
-  if (process.platform === 'win32' && expectedFiles.some((m) => /\bsymlink\b/.test(m))) {
-    return;
+  if (process.platform === 'win32') {
+    expectedFiles = expectedFiles.filter(m => m.indexOf('symlink')===-1);
   }
 
   test(pattern, (done) => {
@@ -49,18 +49,5 @@ globs.forEach((pattern) => {
 function cleanResults (m) {
   // normalize discrepancies in ordering, duplication,
   // and ending slashes.
-  return m
-    .map(m => m.replace(/\/+/g, '/').replace(/\/$/, ''))
-    .sort(alphasort)
-    .reduce((set, f) => {
-      if (f !== set[set.length - 1]) {
-        set.push(f);
-      }
-      return set;
-    }, [])
-    .map((f) =>
-      // de-windows
-      process.platform !== 'win32' ? f : f.replace(/^[a-zA-Z]:[\/\\]+/, '/').replace(/[\\\/]+/g, '/')
-    )
-    .sort(alphasort);
+  return m.sort(alphasort);
 }

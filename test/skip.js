@@ -37,7 +37,10 @@ const cases = [
 cases.forEach(c => {
   const cwd = c[0];
   const options = c[1];
-  const expected = c[2].sort();
+  let expected = c[2].sort();
+  if (process.platform === 'win32') {
+    expected = expected.filter(path => path.indexOf('symlink') === -1);
+  }
   test(cwd + ' ' + JSON.stringify(options), done => {
     glob(cwd, options, (er, res) => {
       expect(er).toBeFalsy();

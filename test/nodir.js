@@ -33,7 +33,10 @@ cases.forEach(c => {
   const pattern = c[0];
   const options = c[1] || {};
   options.nodir = true;
-  const expected = c[2].sort();
+  let expected = c[2].sort();
+  if (process.platform === 'win32') {
+    expected = expected.filter(path => path.indexOf('symlink') === -1);
+  }
   test(pattern + ' ' + JSON.stringify(options), done => {
     glob(options.cwd || '.', {pattern, ...options}, (er, res) => {
       expect(er).toBeFalsy();
