@@ -1,9 +1,18 @@
 # Readdir-Glob
-
-[![Build Status](https://travis-ci.com/Yqnn/node-readdir-glob.svg?branch=master)](https://travis-ci.com/Yqnn/node-readdir-glob) [![Coverage Status](https://coveralls.io/repos/github/Yqnn/node-readdir-glob/badge.svg?branch=master)](https://coveralls.io/github/Yqnn/node-readdir-glob?branch=master)
+[![Build Status](https://app.travis-ci.com/Yqnn/node-readdir-glob.svg?branch=master)](https://app.travis-ci.com/Yqnn/node-readdir-glob) [![Coverage Status](https://coveralls.io/repos/github/Yqnn/node-readdir-glob/badge.svg?branch=master)](https://coveralls.io/github/Yqnn/node-readdir-glob?branch=master)
 
 Recursive version of fs.readdir wih stream API and glob filtering.
 Uses the `minimatch` library to do its matching.
+
+Requires Node.js 10.0 or later.
+
+## Performances
+
+Compared to `glob`, `readdir-glob` is memory efficient: no matter the file system size, or the number of returned files, the memory usage is constant.
+
+The CPU cost is proportional to the number of files in `root` folder, minus the number files in `options.skip` folders.
+
+**Advice**: For better performances use `options.skip` to restrict the search as much as possible.
 
 ## Usage
 
