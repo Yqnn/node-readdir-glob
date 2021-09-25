@@ -38,65 +38,67 @@ const cases = [
 
 
 
-cases.forEach((c, i) => {
-  const pattern = c[0];
-  const ignore = c[1];
-  let expectedFiles = c[2].sort();
-  let opt = c[3];
-  let name = i + ' ' + pattern + ' ' + JSON.stringify(ignore);
-  if (typeof opt === 'string') {
-    opt = { cwd: opt };
-  }
+describe('ignore', () => {
+  cases.forEach((c, i) => {
+    const pattern = c[0];
+    const ignore = c[1];
+    let expectedFiles = c[2].sort();
+    let opt = c[3];
+    let name = i + ' ' + pattern + ' ' + JSON.stringify(ignore);
+    if (typeof opt === 'string') {
+      opt = { cwd: opt };
+    }
 
-  if (opt) {
-    name += ' ' + JSON.stringify(opt)
-  } else {
-    opt = {};
-  }
+    if (opt) {
+      name += ' ' + JSON.stringify(opt)
+    } else {
+      opt = {};
+    }
 
-  const matches = [];
-  opt.ignore = ignore;
+    const matches = [];
+    opt.ignore = ignore;
 
-  test(name, done => {
-    process.chdir(__dirname + '/fixtures');
+  it(name, done => {
+      process.chdir(__dirname + '/fixtures');
 
-    glob(opt.cwd || '.', {...opt, pattern}, (er, res) => {
-      expect(er).toBeFalsy();
+      glob(opt.cwd || '.', {...opt, pattern}, (er, res) => {
+        expect(er).toBeFalsy();
 
-      if (process.platform === 'win32') {
-        expectedFiles = expectedFiles.filter(f => f.indexOf('symlink') === -1);
-      }
-      res.sort();
-      matches.sort();
+        if (process.platform === 'win32') {
+          expectedFiles = expectedFiles.filter(f => f.indexOf('symlink') === -1);
+        }
+        res.sort();
+        matches.sort();
 
-      expect(res).toEqual(expectedFiles);
-      expect(matches).toEqual(expectedFiles);
-      done();
-    }).on('match', p => matches.push(p.relative));
+        expect(res).toEqual(expectedFiles);
+        expect(matches).toEqual(expectedFiles);
+        done();
+      }).on('match', p => matches.push(p.relative));
+    });
   });
-});
 
 
-const pattern = 'fixtures/*';
-[true, false].forEach(dot => {
-  ['fixtures/**', null].forEach(ignore => {
-    [false, true].forEach(nonull => {
-      [false, __dirname, '.'].forEach(cwd => {
-        const opt = {
-          dot: dot,
-          ignore: ignore,
-          nonull: nonull
-        };
-        const expectedFiles = ignore ? [] : [ 'fixtures/a' ];
-        test('race condition: ' + JSON.stringify(opt), done => {
-          let cb;
-          const cbSet = new Promise((resolve, _) => cb = resolve);
-          process.chdir(__dirname);
-          glob(cwd, {...opt, pattern}, (_, matches) => cb(matches))
-          .on('end', () => {
-            cbSet.then((res)=>{
-              expect(res).toEqual(expectedFiles);
-              done();
+  const pattern = 'fixtures/*';
+  [true, false].forEach(dot => {
+    ['fixtures/**', null].forEach(ignore => {
+      [false, true].forEach(nonull => {
+        [false, __dirname, '.'].forEach(cwd => {
+          const opt = {
+            dot: dot,
+            ignore: ignore,
+            nonull: nonull
+          };
+          const expectedFiles = ignore ? [] : [ 'fixtures/a' ];
+        it('race condition: ' + JSON.stringify(opt), done => {
+            let cb;
+            const cbSet = new Promise((resolve, _) => cb = resolve);
+            process.chdir(__dirname);
+            glob(cwd, {...opt, pattern}, (_, matches) => cb(matches))
+            .on('end', () => {
+              cbSet.then((res)=>{
+                expect(res).toEqual(expectedFiles);
+                done();
+              });
             });
           });
         });
