@@ -1,6 +1,7 @@
 .*.swp
-node_modules/*
-v8.log
-profile.txt
-coverage/
+/node_modules/*
+/v8.log
+/profile.txt
+/coverage/
+/.nyc_output/
 .DS_Store

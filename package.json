@@ -16,12 +16,12 @@
     "minimatch": "^3.0.4"
   },
   "devDependencies": {
-    "coveralls": "^3.1.0",
-    "jest": "^25.5.4",
-    "mkdirp": "^1.0.0",
-    "path-is-absolute": "^1.0.0",
-    "rimraf": "^2.2.8",
-    "tick": "0.0.6"
+    "coveralls": "^3.1.1",
+    "jasmine": "^3.9.0",
+    "mkdirp": "^1.0.4",
+    "rimraf": "^3.0.2",
+    "tick": "0.0.6",
+    "nyc": "^15.1.0"
   },
   "keywords": [
     "recursive",
@@ -35,9 +35,9 @@
     "glob"
   ],
   "scripts": {
-    "test": "jest --coverage",
+    "test": "npx nyc --reporter=lcov --reporter=text-summary --reporter=html jasmine --config=jasmine.json",
     "test-regen": "TEST_REGEN=1 jest --coverage",
-    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "coveralls": "npm run test && cat ./coverage/lcov.info | coveralls",
     "bench": "bash scripts/benchmark.sh",
     "profile": "bash scripts/profile.sh && cat profile.txt"
   },

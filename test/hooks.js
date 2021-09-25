@@ -59,7 +59,7 @@ function alphasort (a, b) {
 }
 
 
-module.exports = async function () {
+beforeAll(async () => {
   const fixtureDir = path.resolve(__dirname, 'fixtures');
   
   let files = [
@@ -160,4 +160,14 @@ module.exports = async function () {
   const fname = path.resolve(__dirname, 'bash-results.json');
   const data = JSON.stringify(bashOutput, null, 2) + '\n';
   await fsPromises.writeFile(fname, data);
-};
+});
+
+afterAll(async () => {
+  await new Promise((resolve, reject) => rimraf(path.resolve(__dirname, 'fixtures'), resolve));
+});
+
+const origCwd = process.cwd();
+afterEach(async () => {
+  process.chdir(origCwd);
+});
+
