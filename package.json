@@ -16,7 +16,6 @@
     "minimatch": "^3.0.4"
   },
   "devDependencies": {
-    "coveralls": "^3.1.1",
     "jasmine": "^3.9.0",
     "mkdirp": "^1.0.4",
     "rimraf": "^3.0.2",
@@ -37,7 +36,6 @@
   "scripts": {
     "test": "npx nyc --reporter=lcov --reporter=text-summary --reporter=html jasmine --config=jasmine.json",
     "test-regen": "TEST_REGEN=1 jest --coverage",
-    "coveralls": "npm run test && cat ./coverage/lcov.info | coveralls",
     "bench": "bash scripts/benchmark.sh",
     "profile": "bash scripts/profile.sh && cat profile.txt"
   },
