@@ -1,5 +1,5 @@
 # Readdir-Glob
-[![Build Status](https://app.travis-ci.com/Yqnn/node-readdir-glob.svg?branch=master)](https://app.travis-ci.com/Yqnn/node-readdir-glob) [![Coverage Status](https://coveralls.io/repos/github/Yqnn/node-readdir-glob/badge.svg?branch=master)](https://coveralls.io/github/Yqnn/node-readdir-glob?branch=master)
+![Build Status](https://github.com/Yqnn/node-readdir-glob/actions/workflows/test.yml/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/Yqnn/node-readdir-glob/badge.svg?branch=master)](https://coveralls.io/github/Yqnn/node-readdir-glob?branch=master)
 
 Recursive version of fs.readdir wih stream API and glob filtering.
 Uses the `minimatch` library to do its matching.
