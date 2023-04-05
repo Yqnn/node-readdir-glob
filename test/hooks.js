@@ -33,7 +33,7 @@ function cleanResults (m) {
 function flatten (chunks) {
   let s = 0;
   chunks.forEach(function (c) { s += c.length });
-  const out = new Buffer(s);
+  const out = Buffer.alloc(s);
   s = 0;
   chunks.forEach(function (c) {
     c.copy(out, s);
