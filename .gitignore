@@ -1,4 +1,5 @@
 .*.swp
+/dist/
 /node_modules/*
 /v8.log
 /profile.txt

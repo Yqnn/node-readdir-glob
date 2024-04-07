@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ES2020",
+    "declarationDir": "dist/esm",
+    "outDir": "dist/esm"
+  },
+  "files": ["src/index.ts"],
+  "exclude": ["node_modules", "test/**"]
+}
