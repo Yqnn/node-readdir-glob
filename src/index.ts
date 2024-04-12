@@ -34,7 +34,7 @@ function readdir(dir: fs.PathLike, strict: boolean): Promise<fs.Dirent[]> {
 }
 
 function getStat(file: fs.PathLike, followSymlinks: boolean): Promise<fs.Stats | null> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const statFunc = followSymlinks ? fs.stat : fs.lstat;
     statFunc(file, (err, stats) => {
       if(err) {
@@ -72,34 +72,24 @@ async function* exploreWalkAsync(
   useStat:boolean,
   shouldSkip:(path: string) => boolean,
   strict:boolean
-) : AsyncGenerator<Match> {
+) : AsyncGenerator<Required<Match>> {
   let files = await readdir(path + dir, strict);
   for(const file of files) {
-    let name: fs.Dirent | string = file.name;
-    if(name === undefined) {
-      // undefined file.name means the `withFileTypes` options is not supported by node
-      // we have to call the stat function to know if file is directory or not.
-      name = file;
-      useStat = true;
-    }
+    let name: string = file.name;
     const filename = dir + '/' + name;
     const relative = filename.slice(1); // Remove the leading /
     const absolute = path + '/' + relative;
-    let stat: Stat | null = null;
+    let stat: Stat = file;
     if(useStat || followSymlinks) {
-      stat = await getStat(absolute, followSymlinks);
+      stat = await getStat(absolute, followSymlinks) ?? stat;
     }
-    if(!stat && file.name !== undefined) {
-      stat = file;
-    }
-
-    if(stat?.isDirectory()) {
+    if(stat.isDirectory()) {
       if(!shouldSkip(relative)) {
         yield {relative, absolute, stat};
         yield* exploreWalkAsync(filename, path, followSymlinks, useStat, shouldSkip, false);
       }
     } else {
-      yield {relative, absolute, stat : stat ?? undefined};
+      yield {relative, absolute, stat};
     }
   }
 }
@@ -110,7 +100,7 @@ async function* explore(
   followSymlinks: boolean,
   useStat: boolean,
   shouldSkip: (path: string) => boolean
-): AsyncGenerator<Match>  {
+): AsyncGenerator<Required<Match>>  {
   yield* exploreWalkAsync('', path, followSymlinks, useStat, shouldSkip, true);
 }
 
@@ -226,9 +216,8 @@ export class ReaddirGlob extends EventEmitter<{
   private inactive: boolean;
 
   private iterator: ReturnType<typeof explore>;
-  private _matches: string[] | undefined;
 
-  constructor(cwd: string, options?: Options |  Callback, cb?: Callback) {
+  constructor(cwd?: string, options?: Options |  Callback, cb?: Callback) {
     super();
     if(typeof options === 'function') {
       cb = options;
@@ -272,13 +261,14 @@ export class ReaddirGlob extends EventEmitter<{
     this.aborted = false;
   
     if(cb) {
-      this._matches = []; 
-      this.on('match', match => this._matches?.push(this.options.absolute ? match.absolute : match.relative));
-      this.on('error', err => cb?.(err));
-      this.on('end', () => cb?.(null, this._matches));
+      const nonNullCb = cb;
+      const matches: string[] = [];
+      this.on('match', match => matches.push(this.options.absolute ? match.absolute : match.relative));
+      this.on('error', err => nonNullCb(err));
+      this.on('end', () => nonNullCb(null, matches));
     }
 
-    setTimeout( () => this._next(), 0);
+    setTimeout( () => this._next() );
   }
 
   private _shouldSkipDirectory(relative: string) {
@@ -297,7 +287,7 @@ export class ReaddirGlob extends EventEmitter<{
       this.iterator.next()
       .then((obj)=> {
         if(!obj.done) {
-          const isDirectory = obj.value.stat?.isDirectory() ?? false;
+          const isDirectory = obj.value.stat.isDirectory();
           if(this._fileMatches(obj.value.relative, isDirectory )) {
             let relative = obj.value.relative;
             let absolute = obj.value.absolute;
@@ -346,11 +336,11 @@ export class ReaddirGlob extends EventEmitter<{
 }
 
 interface readdirGlobInterface {
-  (pattern: string, options?: Options | Callback, cb?: Callback): ReaddirGlob;
+  (pattern?: string, options?: Options | Callback, cb?: Callback): ReaddirGlob;
   ReaddirGlob: typeof ReaddirGlob;
 }
 
-export const readdirGlob: readdirGlobInterface = (pattern: string, options?: Options | Callback, cb?: Callback) =>
+export const readdirGlob: readdirGlobInterface = (pattern?: string, options?: Options | Callback, cb?: Callback) =>
   new ReaddirGlob(pattern, options, cb);
 
 readdirGlob.ReaddirGlob = ReaddirGlob;
