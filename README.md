@@ -4,7 +4,9 @@
 Recursive version of fs.readdir wih stream API and glob filtering.
 Uses the `minimatch` library to do its matching.
 
-Requires Node.js 10.0 or later.
+Requirements:
+- 1.x.x requires Node.js 10.0 or later.
+- 2.x.x requires Node.js 14.0 or later.
 
 ## Performances
 
