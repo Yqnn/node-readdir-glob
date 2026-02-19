@@ -86,7 +86,8 @@ describe('ignore', () => {
           const opt = {
             dot: dot,
             ignore: ignore,
-            nonull: nonull
+            nonull: nonull,
+            cwd
           };
           const expectedFiles = ignore ? [] : [ 'fixtures/a' ];
         it('race condition: ' + JSON.stringify(opt), done => {

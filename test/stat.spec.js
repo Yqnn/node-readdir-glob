@@ -3,7 +3,7 @@ const glob = require('../');
 const { Stats } = require('fs');
 const dir = __dirname + '/fixtures';
 
-describe('slash-cwd', () => {
+describe('stat', () => {
   it('stat all the things', done => {
     const g = new glob.ReaddirGlob(dir, { stat: true, pattern: 'a/*abc*/**' });
     let matches = [];

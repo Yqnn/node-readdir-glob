@@ -41,7 +41,7 @@ describe('realpath', () => {
   cases.forEach(c => {
     const opt = c[0];
 
-    it(JSON.stringify(opt), done => {
+    it(JSON.stringify(c), done => {
       skipIfWindows();
       let expected = c[1];
       if (!(opt.nonull && expected[0].match(/^no one here/))) {
