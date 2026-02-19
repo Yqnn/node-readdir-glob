@@ -13,7 +13,7 @@
     "index.js"
   ],
   "dependencies": {
-    "minimatch": "^5.1.0"
+    "minimatch": "^10.2.2"
   },
   "devDependencies": {
     "jasmine": "^4.6.0",
