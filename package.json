@@ -28,7 +28,7 @@
   },
   "types": "./dist/cjs/index.cjs.d.ts",
   "dependencies": {
-    "minimatch": "^9.0.0"
+    "minimatch": "^10.2.2"
   },
   "devDependencies": {
     "@types/node": "^20.12.5",
