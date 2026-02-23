@@ -2,7 +2,7 @@
   "author": "Yann Armelin",
   "name": "readdir-glob",
   "description": "Recursive fs.readdir with streaming API and glob filtering.",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "homepage": "https://github.com/Yqnn/node-readdir-glob",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
   },
   "types": "./dist/cjs/index.cjs.d.ts",
   "dependencies": {
-    "minimatch": "^10.2.2"
+    "minimatch": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
