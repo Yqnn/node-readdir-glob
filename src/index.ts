@@ -345,3 +345,4 @@ export const readdirGlob: readdirGlobInterface = (pattern?: string, options?: Op
 
 readdirGlob.ReaddirGlob = ReaddirGlob;
 
+export default readdirGlob;

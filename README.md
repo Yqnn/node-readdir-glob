@@ -7,6 +7,7 @@ Uses the `minimatch` library to do its matching.
 Requirements:
 - 1.x.x requires Node.js 10.0 or later.
 - 2.x.x requires Node.js 14.0 or later.
+- 3.x.x requires Node.js 18.0 or later.
 
 ## Performances
 
@@ -24,7 +25,11 @@ npm i readdir-glob
 ```
 
 ```javascript
+// CommonJS:
 const readdirGlob = require('readdir-glob');
+// ESM:
+import readdirGlob from 'readdir-glob';
+
 const globber = readdirGlob('.', {pattern: '**/*.js'});
 globber.on('match', match => {
     // m.relative: relative path of the matched file
