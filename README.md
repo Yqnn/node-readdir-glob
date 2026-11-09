@@ -8,6 +8,7 @@ Requirements:
 - 1.x.x requires Node.js 10.0 or later.
 - 2.x.x requires Node.js 14.0 or later.
 - 3.x.x requires Node.js 18.0 or later.
+- 4.x.x requires Node.js 20.0 or later.
 
 ## Performances
 
